@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0 - 2026-11-20
+- The control-room view groups battery charge and power below the central house. The battery panel fits its contents and leaves more space below the icon.
+
 ## 0.2.0 - 2026-11-20
 - Large automatic tiles show directional energy flows between solar, home, grid and optional battery.
 - Leave the home sensor empty to calculate solar power plus signed grid power. Existing home sensor selections take precedence.

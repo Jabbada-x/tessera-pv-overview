@@ -31,6 +31,8 @@ Bei mehreren Wechselrichtern einen Summensensor auswählen. Für mehrere Akkus s
 
 ## Größenanpassung
 
+Unter dem runden Haus zeigt ein zentriertes Akkufeld Ladestand, Laderichtung und Leistung. Der Abstand unter dem Akkusymbol skaliert mit dem Display. Für beide Werte die Sensoren Akkuleistung und Akkuladestand zuordnen.
+
 Im Modus **Automatisch** zeigt eine große Kachel das Haus zwischen Solarmodul und Stromnetz. Pfeile zeigen die Richtung am Netzanschluss und am optionalen Akku. Bei Stillstand oder fehlenden Messwerten bleibt die Verbindung ohne Pfeil. Tagesertrag und Ladestand erscheinen als Zusatzwerte. Kleinere Kacheln und der Modus **Kompakt** verwenden die Zahlenansicht. Angezeigt wird in der Reihenfolge Solar, Netz, Haus, Akkuleistung, Ladestand, Tagesertrag. Sehr kleine Kacheln zeigen nur Solar. Größere Kacheln zeigen weitere Werte; nicht ausgewählte optionale Sensoren entfallen. **Automatisch** zeigt bis zu sechs Werte, **Kompakt** bis zu vier. Eine Fußzeile weist bei genügend Platz auf ausgelassene Werte hin.
 
 Die Darstellung verwendet Tessera-Schriften und Hell-/Dunkelfarben. Der Layout-Editor zeigt einen Platzhalter; die individuelle Darstellung entsteht erst auf dem Display. Die Zollgröße muss im Plugin nicht festgelegt werden.
@@ -41,4 +43,4 @@ Die Darstellung verwendet Tessera-Schriften und Hell-/Dunkelfarben. Der Layout-E
 
 ## Entwicklungsstand
 
-Version 0.2.0, lokal nutzbare Testfassung. Details und reproduzierbare Prüfkommandos stehen in `VALIDATION.md`. Es gibt noch keinen erfolgreichen vollständigen Firmware-Build und keine Prüfung auf realen 4-, 7- oder 10,1-Zoll-Displays.
+Version 0.3.0, lokal nutzbare Testfassung. Details und reproduzierbare Prüfkommandos stehen in `VALIDATION.md`. Es gibt noch keinen erfolgreichen vollständigen Firmware-Build und keine Prüfung auf realen 4-, 7- oder 10,1-Zoll-Displays.

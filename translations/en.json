@@ -49,6 +49,7 @@
     "enlarge": "Enlarge tile",
     "check_sensors": "Check sensors",
     "live": "Home Assistant",
-    "decimal": "."
+    "decimal": ".",
+    "standby": "Standby"
   }
 }

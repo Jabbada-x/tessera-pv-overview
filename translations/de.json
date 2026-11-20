@@ -49,6 +49,7 @@
     "enlarge": "Kachel vergrößern",
     "check_sensors": "Sensoren prüfen",
     "live": "Home Assistant",
-    "decimal": ","
+    "decimal": ",",
+    "standby": "Standby"
   }
 }
