@@ -3,6 +3,17 @@
 #include <iostream>
 using namespace esphome::pv_overview::model;
 int main() {
+  const auto solar = parse("0.8", "kW", Kind::POWER, 100);
+  auto balance = [&](const char *grid, uint32_t now = 100, unsigned age = 0) {
+    return home_balance(solar, parse(grid, "W", Kind::POWER, 110), now, age);
+  };
+  assert(balance("150").value == 950);
+  assert(balance("-150").value == 650);
+  assert(balance("-800").status == Status::OK && balance("-800").value == 0);
+  assert(balance("-801").status == Status::INVALID);
+  assert(balance("unavailable").status == Status::UNAVAILABLE);
+  assert(balance("150", 116, 15).status == Status::STALE);
+  assert(home_balance(parse("", "W", Kind::POWER, 0), solar, 100, 0).status == Status::MISSING);
   assert(parse("1.5", "kW", Kind::POWER, 0).value == 1500);
   assert(parse("-500", "W", Kind::POWER, 0).value == -500);
   assert(parse("5400", "Wh", Kind::ENERGY, 0).value == 5.4);

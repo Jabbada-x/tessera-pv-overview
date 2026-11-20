@@ -5,7 +5,6 @@ tiles:
   options:
     solar: sensor.pv_demo_solar
     grid: sensor.pv_demo_grid
-    home: sensor.pv_demo_home
     battery: sensor.pv_demo_battery
     soc: sensor.pv_demo_soc
     today: sensor.pv_demo_today

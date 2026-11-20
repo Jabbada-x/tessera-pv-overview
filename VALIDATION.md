@@ -1,4 +1,4 @@
-# Validation — 0.1.0
+# Validation — 0.2.0
 
 Checked on 2026-11-20. This is an implementation beta, not a hardware-verified release.
 
@@ -43,7 +43,7 @@ TESSERA_TREE=../tessera-core-060 python3 ../tessera-plugins/tools/preview.py . -
 
 If the current preview harness requires a newer core, use the corresponding older plugins-tool revision or run the build from the installed Tessera 0.60.0 app instead. Do not silently treat a newer firmware build as a test of 0.60.0. Inspect each smallest and largest image in both themes; also test full-page portrait. After the official bench passes, generate the store image with its documented `store_image.py` workflow.
 
-The preview values are explicitly synthetic. They exercise a consistent AC balance (1,200 W solar, 600 W household, 400 W charge and 200 W export). The plugin does not infer this balance.
+The preview values are explicitly synthetic. They exercise a consistent AC balance (1,200 W solar, 600 W household, 400 W charge and 200 W export). The first fixture leaves the house sensor empty, so its calculated house value is 1,000 W. The compact fixture uses the measured 600 W appliance load.
 
 ## Physical acceptance
 
