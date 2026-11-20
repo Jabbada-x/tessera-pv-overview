@@ -1,0 +1,109 @@
+id: pv_overview
+version: 0.1.0
+api: '0.15'
+icon: solar-power
+maintainer: Jabbada-x
+license: MIT
+stage: beta
+topics:
+- energy
+- home
+boards: any
+flash_kb: 24
+attributes:
+- ai-developed
+tiles:
+- id: overview
+  name: tile_name
+  icon: solar-power
+  sizes:
+    min: 1x1
+    max: 9x9
+    full: true
+  memory: 3072
+  example: tile_example
+  options:
+  - id: solar
+    kind: entity
+    domains:
+    - sensor
+    attributes:
+    - unit_of_measurement
+    label: solar
+    hint: solar_hint
+  - id: grid
+    kind: entity
+    domains:
+    - sensor
+    attributes:
+    - unit_of_measurement
+    label: grid
+    hint: grid_hint
+  - id: home
+    kind: entity
+    domains:
+    - sensor
+    attributes:
+    - unit_of_measurement
+    label: home
+    hint: home_hint
+  - id: battery
+    kind: entity
+    domains:
+    - sensor
+    attributes:
+    - unit_of_measurement
+    label: battery
+    hint: battery_hint
+  - id: soc
+    kind: entity
+    domains:
+    - sensor
+    attributes:
+    - unit_of_measurement
+    label: soc
+    hint: soc_hint
+  - id: today
+    kind: entity
+    domains:
+    - sensor
+    attributes:
+    - unit_of_measurement
+    label: today
+    hint: today_hint
+  - id: grid_invert
+    kind: toggle
+    label: grid_invert
+    default: false
+  - id: battery_invert
+    kind: toggle
+    label: battery_invert
+    default: false
+  - id: layout
+    kind: choice
+    label: layout
+    hint: layout_hint
+    default: auto
+    choices:
+    - value: auto
+      label: auto
+    - value: compact
+      label: compact
+  - id: deadband
+    kind: number
+    label: deadband
+    hint: deadband_hint
+    min: 0
+    max: 100
+    step: 1
+    unit: W
+    default: 10
+  - id: stale_minutes
+    kind: number
+    label: stale_minutes
+    hint: stale_hint
+    min: 0
+    max: 1440
+    step: 1
+    unit: min
+    default: 0

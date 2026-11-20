@@ -1,0 +1,94 @@
+# Synthetic test fixtures, not recordings of the user installation.
+tiles:
+- tile: overview
+  name: PV overview - synthetic daytime
+  options:
+    solar: sensor.pv_demo_solar
+    grid: sensor.pv_demo_grid
+    home: sensor.pv_demo_home
+    battery: sensor.pv_demo_battery
+    soc: sensor.pv_demo_soc
+    today: sensor.pv_demo_today
+  sizes:
+  - 1x1
+  - 2x2
+  - 3x2
+  - full
+- tile: overview
+  name: Compact
+  options:
+    solar: sensor.pv_demo_solar
+    grid: sensor.pv_demo_grid
+    home: sensor.pv_demo_home
+    battery: sensor.pv_demo_battery
+    soc: sensor.pv_demo_soc
+    today: sensor.pv_demo_today
+    layout: compact
+  sizes:
+  - 1x1
+  - 2x2
+  - full
+- tile: overview
+  name: Choose sensors
+  sizes:
+  - 1x1
+  - 2x2
+  - full
+- tile: overview
+  name: Unavailable and wrong units
+  options:
+    solar: sensor.pv_demo_solar
+    grid: sensor.pv_demo_grid
+    home: sensor.pv_demo_home
+    battery: sensor.pv_demo_battery
+    soc: sensor.pv_demo_soc
+    today: sensor.pv_demo_today
+  sizes:
+  - 2x2
+  - full
+  data:
+    entities:
+      solar:
+        state: unavailable
+      grid:
+        state: '500'
+        attributes:
+          unit_of_measurement: kWh
+      home:
+        state: unknown
+      battery:
+        state: nan
+        attributes:
+          unit_of_measurement: W
+      soc:
+        state: '101'
+        attributes:
+          unit_of_measurement: '%'
+      today:
+        state: unknown
+states:
+  sensor.pv_demo_solar:
+    state: '1200'
+    attributes:
+      unit_of_measurement: W
+  sensor.pv_demo_grid:
+    state: '-200'
+    attributes:
+      unit_of_measurement: W
+  sensor.pv_demo_home:
+    state: '600'
+    attributes:
+      unit_of_measurement: W
+  sensor.pv_demo_battery:
+    state: '400'
+    attributes:
+      unit_of_measurement: W
+  sensor.pv_demo_soc:
+    state: '72'
+    attributes:
+      unit_of_measurement: '%'
+  sensor.pv_demo_today:
+    state: '5.4'
+    attributes:
+      unit_of_measurement: kWh
+time_zone: Europe/Berlin
