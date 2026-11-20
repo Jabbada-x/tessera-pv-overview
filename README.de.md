@@ -41,4 +41,4 @@ Die Darstellung verwendet Tessera-Schriften und Hell-/Dunkelfarben. Der Layout-E
 
 ## Entwicklungsstand
 
-Version 0.2.0, lokal nutzbare Testfassung. Details und reproduzierbare Prüfkommandos stehen in `VALIDATION.md`. Es gibt noch keinen erfolgreichen vollständigen Firmware-Build und keine Prüfung auf realen 4-, 7- oder 10,1-Zoll-Displays. Ein Store-Vorschaubild fehlt, bis die offizielle Vorschau erfolgreich läuft.
+Version 0.2.0, lokal nutzbare Testfassung. Details und reproduzierbare Prüfkommandos stehen in `VALIDATION.md`. Es gibt noch keinen erfolgreichen vollständigen Firmware-Build und keine Prüfung auf realen 4-, 7- oder 10,1-Zoll-Displays.

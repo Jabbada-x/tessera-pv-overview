@@ -47,4 +47,4 @@ Age checking is off by default. Set **Maximum reading age** only when all select
 
 See `VALIDATION.md`. The source is based on Tessera's official template. Plugin API minimum is 0.15; only APIs present in firmware 0.60.0/API 0.24 are used. The schema was checked against release `screens-v0.4.97`, which ships firmware 0.60.0. No firmware upgrade is assumed.
 
-The archive contains deterministic synthetic preview fixtures, not recordings of your installation. Flash/memory budgets are conservative estimates pending a real build. No store image is included because the official bench has not run successfully. This beta is for local testing, not a verified store release.
+The archive contains deterministic synthetic preview fixtures, not recordings of your installation. Flash/memory budgets are conservative estimates pending a real build. This beta is for local testing, not a verified store release.

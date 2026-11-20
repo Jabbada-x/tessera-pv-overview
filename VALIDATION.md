@@ -4,7 +4,7 @@ Checked on 2026-11-20. This is an implementation beta, not a hardware-verified r
 
 ## Passed
 
-- Official `tessera-plugins/tools/check.py` against the unmodified manifest validator from Tessera release `screens-v0.4.97` (firmware 0.60.0, plugin API 0.24): `pv_overview: ok`, `needs: ok`. The checker notes the missing optional store image.
+- Official `tessera-plugins/tools/check.py` against the unmodified manifest validator from Tessera release `screens-v0.4.97` (firmware 0.60.0, plugin API 0.24): `pv_overview: ok`, `needs: ok`. The catalog artwork passes the store image checks.
 - C++17 native tests for the shared production model: strict number parsing, missing/unavailable/invalid states, W/kW and Wh/kWh conversion, percentage bounds, unsupported units, age checking, direction hysteresis, formatting, and more than 60,000 combinations of layout dimensions and requested reading counts.
 - Native model compiled with `-Wall -Wextra -Werror -fsanitize=address,undefined`; execution passed with leak detection disabled because the sandbox uses ptrace. This does not compile the display adapter or ESPHome firmware.
 - Python component source passes `py_compile`.
@@ -14,7 +14,7 @@ Checked on 2026-11-20. This is an implementation beta, not a hardware-verified r
 - Full ESPHome firmware compilation and linking, including the C++ tile adapter against LVGL.
 - The official render bench and image inspection for light/dark on 4-, 7-, 10.1-inch screens. Invoking `tools/preview.py --strict` stops because `git` is missing. Shell DNS/network access also prevents fetching its build dependencies.
 - Physical display tests, sensor delivery from the user's Home Assistant, and OTA installation.
-- Measured flash/RAM budgets and store thumbnail. Manifest values are estimates.
+- Measured flash/RAM budgets. Manifest values are estimates.
 
 ## Repeat native tests
 
