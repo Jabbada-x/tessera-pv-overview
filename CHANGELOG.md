@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.1 - 2026-11-22
+- Account for charging and discharging when calculating household consumption from a configured battery power sensor.
+
 ## 0.4.0 - 2026-11-22
 - Display daily yield directly under solar output when space allows.
 - Show battery charge and power beside a horizontal charge indicator on a tinted, outlined card in both themes.

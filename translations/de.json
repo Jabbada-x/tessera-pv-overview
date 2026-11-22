@@ -15,7 +15,7 @@
     "today": "PV-Tagesertrag (optional)",
     "solar_hint": "Gesamte AC-Solarleistung in W oder kW. Bei mehreren Wechselrichtern einen Summensensor auswählen.",
     "grid_hint": "Nettoleistung mit Vorzeichen: positiv = Bezug, negativ = Einspeisung. Bei umgekehrter Konvention Vorzeichen invertieren.",
-    "home_hint": "Leer lassen für Solarleistung plus Netzleistung. Ein ausgewählter Sensor hat Vorrang.",
+    "home_hint": "Leer lassen für Solar + Netzbezug − Einspeisung − Akkuladung + Entladung. Ein ausgewählter Sensor hat Vorrang.",
     "battery_hint": "Leistung mit Vorzeichen: positiv = Laden, negativ = Entladen. Wenn vorhanden einen AC-seitigen Sensor wählen.",
     "soc_hint": "Ladestand in %. Bei Anlagen ohne Akku leer lassen.",
     "today_hint": "Täglich zurückgesetzter Ertrag in Wh oder kWh, kein Gesamtzähler.",

@@ -7,6 +7,18 @@ int main() {
   auto balance = [&](const char *grid, uint32_t now = 100, unsigned age = 0) {
     return home_balance(solar, parse(grid, "W", Kind::POWER, 110), now, age);
   };
+  const auto pv = parse("700", "W", Kind::POWER, 100);
+  const auto grid_import = parse("27", "W", Kind::POWER, 100);
+  auto storage = parse("197", "W", Kind::POWER, 99);
+  auto with_storage = [&]() { return home_balance(pv, grid_import, 100, 30, &storage); };
+  assert(with_storage().status == Status::OK && with_storage().value == 530);
+  assert(with_storage().updated == 99);
+  storage.value = -197;
+  assert(with_storage().value == 924);
+  storage.updated = 1;
+  assert(with_storage().status == Status::STALE);
+  storage.status = Status::UNAVAILABLE;
+  assert(with_storage().status == Status::UNAVAILABLE);
   assert(balance("150").value == 950);
   assert(balance("-150").value == 650);
   assert(balance("-800").status == Status::OK && balance("-800").value == 0);

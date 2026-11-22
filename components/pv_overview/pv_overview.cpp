@@ -234,7 +234,10 @@ class OverviewTile : public tessera::Tile {
     return KEYS[i];
   }
   void paint(uint32_t epoch) {
-    if (!configured_[2]) readings_[2] = model::home_balance(readings_[0], readings_[1], epoch, max_age_);
+    if (!configured_[2]) {
+      const auto *battery = configured_[3] ? &readings_[3] : nullptr;
+      readings_[2] = model::home_balance(readings_[0], readings_[1], epoch, max_age_, battery);
+    }
     if (charge_bar_) {
       if (model::status(readings_[4], epoch, max_age_) == Status::OK && readings_[4].value > 0) {
         lv_obj_set_width(charge_bar_, std::max(1, static_cast<int>(charge_width_ * readings_[4].value / 100)));

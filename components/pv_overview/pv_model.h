@@ -62,15 +62,23 @@ inline Status status(const Reading &r, uint32_t now, uint32_t max_age) {
   return r.status;
 }
 
-// Inputs are in watts, with import positive and export negative.
-inline Reading home_balance(Reading solar, Reading grid, uint32_t now, uint32_t max_age) {
+// Inputs are in watts, with import and battery charging positive. Solar is generation before storage flows.
+inline Reading home_balance(Reading solar, Reading grid, uint32_t now, uint32_t max_age,
+                            const Reading *battery = nullptr) {
   for (Reading input : {solar, grid}) {
     input.status = status(input, now, max_age);
     if (input.status != Status::OK) return input;
   }
-  const double watts = solar.value + grid.value;
+  double watts = solar.value + grid.value;
+  uint32_t updated = std::min(solar.updated, grid.updated);
+  if (battery) {
+    const Status battery_status = status(*battery, now, max_age);
+    if (battery_status != Status::OK) return {0, battery->updated, battery_status};
+    watts -= battery->value;
+    updated = std::min(updated, battery->updated);
+  }
   if (!std::isfinite(watts) || watts < 0) return {0, 0, Status::INVALID};
-  return {watts, std::min(solar.updated, grid.updated), Status::OK};
+  return {watts, updated, Status::OK};
 }
 
 // A Schmitt trigger prevents direction labels flickering near zero. Values themselves are never rounded to zero here.
