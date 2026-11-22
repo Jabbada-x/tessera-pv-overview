@@ -56,6 +56,14 @@ int main() {
   assert(format(1500, Kind::POWER) == "1.50 kW");
   assert(format(-350, Kind::POWER) == "350 W");
   assert(format(50, Kind::PERCENT) == "50 %");
+  // Representative drawable areas after reserving the storage panel and its link.
+  auto small = [](int w, int h, bool tall) { return small_flow(w, h, tall, 68, 72, 78, 58, 20); };
+  assert(small(230, 120, false) == SmallFlow::HORIZONTAL);
+  assert(small(230, 235, true) == SmallFlow::STACKED);
+  assert(small(170, 190, false) == SmallFlow::STACKED);
+  assert(small(230, 90, true) == SmallFlow::HORIZONTAL);
+  assert(small(110, 110, false) == SmallFlow::NONE);
+  assert(small(230, 77, false) == SmallFlow::NONE);
   assert(layout(120, 85, 6, 132, 56, 8).count == 1);
   assert(layout(440, 360, 6, 132, 56, 8).count == 6);
   assert(layout(950, 500, 6, 132, 56, 8).count == 6);

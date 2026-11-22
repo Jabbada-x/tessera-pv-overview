@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.0 - 2026-11-22
+- Add compact horizontal and stacked energy flows for smaller 2×2 and 2×3 automatic tiles.
+
 ## 0.4.1 - 2026-11-22
 - Account for charging and discharging when calculating household consumption from a configured battery power sensor.
 

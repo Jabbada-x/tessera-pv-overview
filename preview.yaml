@@ -11,6 +11,7 @@ tiles:
   sizes:
   - 1x1
   - 2x2
+  - 2x3
   - 3x2
   - full
 - tile: overview

@@ -38,6 +38,22 @@ class OverviewTile : public tessera::Tile {
     flow_ = !compact && width_ >= 3 * card_min_w + 2 * arrow_space &&
             height_ >= row_count * card_min_h + (second_row ? arrow_space + 3 * gap : 0) + (configured_[5] ? bh + gap : 0) &&
             (width_ - 2 * arrow_space) / 3 >= card_min_h + gap;
+    if (!compact && !flow_) {
+      const int pad = std::max(1, ui::px(3));
+      const int lane = std::max(icon_h, ui::text_width(ui::icon(0xF0054), Font::ICON_SMALL));
+      const int pack_h = second_row ? pack_height(pad) + lane : 0;
+      const int node_h = icon_h + 2 * bh + 2 * pad;
+      const int day_h = configured_[5] ? bh + pad : 0;
+      const int value_w = ui::text_width("-9.99 kW", Font::BODY);
+      const int day_w = configured_[5] ? ui::text_width("9.99 kWh", Font::BODY) : 0;
+      small_ = model::small_flow(width_, height_ - pack_h, height_ > width_ || c.rows > c.columns,
+                                 value_w, day_w, node_h + day_h, node_h, lane);
+      if (small_ != model::SmallFlow::NONE) {
+        flow_ = true;
+        create_small_flow(c.parent, height_ - pack_h, lane, pad);
+        return;
+      }
+    }
     if (flow_) {
       create_flow(c.parent, arrow_space);
       return;
@@ -83,7 +99,9 @@ class OverviewTile : public tessera::Tile {
   void on_theme() override {
     for (int i = 0; i < 6; ++i) if (caption_[i]) ui::set_color(caption_[i], theme::MUTED);
     if (pack_) style_pack();
-    if (flow_) lv_obj_set_style_border_color(panels_[2], ui::tone_color(Tone::GOOD, theme::INK), 0);
+    if (panels_[2]) lv_obj_set_style_border_color(panels_[2], ui::tone_color(Tone::GOOD, theme::INK), 0);
+    if (rail_) ui::set_fill(rail_, Tone::NORMAL, theme::LINE);
+    if (stem_) ui::set_fill(stem_, Tone::NORMAL, theme::LINE);
     if (footer_) ui::set_color(footer_, theme::MUTED);
     paint(tessera::epoch());
   }
@@ -91,11 +109,7 @@ class OverviewTile : public tessera::Tile {
   void create_flow(lv_obj_t *parent, int lane) {
     const bool has_pack = configured_[3] || configured_[4];
     const int gap = std::max(1, ui::px(8));
-    const int body = ui::line_height(Font::BODY);
-    const int title = ui::line_height(Font::TITLE);
-    const int icon = ui::line_height(Font::ICON_SMALL);
-    const int pack_h = std::max(icon, (configured_[3] ? body : 0) + (configured_[4] ? title : 0) +
-                                       (configured_[3] && configured_[4] ? gap : 0)) + 2 * gap;
+    const int pack_h = pack_height(gap);
     const int top_h = height_ - (has_pack ? pack_h + lane : 0);
     const int diameter = std::min(top_h, (width_ - 2 * lane) / 3);
     const int cy = top_h / 2;
@@ -110,74 +124,122 @@ class OverviewTile : public tessera::Tile {
     lv_obj_set_style_border_width(hub, std::max(1, ui::px(2)), 0);
     lv_obj_set_style_border_color(hub, ui::tone_color(Tone::GOOD, theme::INK), 0);
     const int centers[] = {cell_w_ / 2, width_ - cell_w_ / 2, cx};
-    const uint32_t symbols[] = {0xF0599, 0xF0D3E, 0xF02DC};
-    for (int i = 0; i < 3; ++i) {
-      int w = i == 2 ? diameter * 4 / 5 : cell_w_;
-      flow_width_[i] = w;
-      x_[i] = centers[i] - w / 2;
-      icons_[i] = ui::label(parent, Font::ICON_SMALL, theme::ACCENT);
-      ui::set_text(icons_[i], ui::icon(symbols[i]));
-      caption_[i] = ui::label(parent, Font::BODY, theme::MUTED);
-      value_[i] = ui::label(parent, Font::TITLE, theme::INK);
-      for (auto *part : {icons_[i], caption_[i], value_[i]}) {
-        lv_obj_set_width(part, w);
-        lv_obj_set_style_text_align(part, LV_TEXT_ALIGN_CENTER, 0);
-      }
-    }
+    for (int i = 0; i < 3; ++i)
+      create_node(parent, i, centers[i], i == 2 ? diameter * 4 / 5 : cell_w_);
     const int hub_left = cx - diameter / 2;
     add_link(parent, 0, hub_left - lane / 2, cy, lane, false);
     add_link(parent, 1, hub_left + diameter + lane / 2, cy, lane, false);
-    if (has_pack) {
-      const int symbol_w = 2 * icon;
-      const int text_space = std::max(1, width_ - symbol_w - 6 * gap);
-      int text_w = configured_[4] ? ui::text_width("100 %", Font::TITLE) : 0;
-      if (configured_[3]) {
-        for (auto key : {"charging", "discharging", "standby", "battery"})
-          text_w = std::max(text_w, ui::text_width(std::string(plugin_->text(key)) + " · -99.99 kW", Font::BODY));
-      }
-      text_w = std::min(text_w, text_space);
-      const int pack_w = symbol_w + text_w + 6 * gap;
-      const int bx = (width_ - pack_w) / 2, by = top_h + lane;
-      const int right = bx + symbol_w + 4 * gap;
-      pack_ = ui::block(parent, theme::RAISED);
-      lv_obj_set_pos(pack_, bx, by);
-      lv_obj_set_size(pack_, pack_w, pack_h);
-      lv_obj_set_style_radius(pack_, gap, 0);
-      const int stroke = std::max(1, ui::px(2));
-      lv_obj_set_style_border_width(pack_, stroke, 0);
-      const int sx = bx + 2 * gap, sy = by + (pack_h - icon) / 2;
-      const int shell_w = symbol_w - 2 * stroke;
-      shell_ = ui::block(parent, theme::RAISED);
-      lv_obj_set_pos(shell_, sx, sy);
-      lv_obj_set_size(shell_, shell_w, icon);
-      lv_obj_set_style_radius(shell_, stroke * 2, 0);
-      lv_obj_set_style_border_width(shell_, stroke, 0);
-      cap_ = ui::block(parent, theme::BATTERY);
-      lv_obj_set_pos(cap_, sx + shell_w, sy + icon / 3);
-      lv_obj_set_size(cap_, 2 * stroke, std::max(1, icon / 3));
-      charge_bar_ = ui::block(parent, theme::BATTERY);
-      charge_width_ = std::max(1, shell_w - 4 * stroke);
-      lv_obj_set_pos(charge_bar_, sx + 2 * stroke, sy + 2 * stroke);
-      lv_obj_set_size(charge_bar_, charge_width_, std::max(1, icon - 4 * stroke));
-      lv_obj_add_flag(charge_bar_, LV_OBJ_FLAG_HIDDEN);
-      style_pack();
-      if (configured_[4]) {
-        value_[4] = ui::label(parent, Font::TITLE, theme::INK);
-        lv_obj_set_pos(value_[4], right, by + (configured_[3] ? gap : (pack_h - title) / 2));
-        lv_obj_set_width(value_[4], text_w);
-        flow_width_[4] = text_w;
-      }
-      if (configured_[3]) {
-        value_[3] = ui::label(parent, Font::BODY, theme::INK);
-        lv_obj_set_pos(value_[3], right, by + (configured_[4] ? title + 2 * gap : (pack_h - body) / 2));
-        lv_obj_set_width(value_[3], text_w);
-        flow_width_[3] = text_w;
-        const int start = cy - diameter / 2 + diameter;
-        add_link(parent, 3, cx, (start + by) / 2, by - start, true);
-      }
-    }
+    if (has_pack) create_pack(parent, top_h + lane, cy - diameter / 2 + diameter, gap);
     if (configured_[5]) create_day(parent);
     hub_diameter_ = diameter;
+  }
+
+  void create_node(lv_obj_t *parent, int i, int center, int w) {
+    const uint32_t symbols[] = {0xF0599, 0xF0D3E, 0xF02DC};
+    flow_width_[i] = w;
+    x_[i] = center - w / 2;
+    icons_[i] = ui::label(parent, Font::ICON_SMALL, theme::ACCENT);
+    ui::set_text(icons_[i], ui::icon(symbols[i]));
+    caption_[i] = ui::label(parent, Font::BODY, theme::MUTED);
+    value_[i] = ui::label(parent, Font::TITLE, theme::INK);
+    for (auto *part : {icons_[i], caption_[i], value_[i]}) {
+      lv_obj_set_width(part, w);
+      lv_obj_set_style_text_align(part, LV_TEXT_ALIGN_CENTER, 0);
+    }
+  }
+
+  int pack_height(int gap) const {
+    const int text = (configured_[3] ? ui::line_height(Font::BODY) : 0) +
+                     (configured_[4] ? ui::line_height(Font::TITLE) : 0) +
+                     (configured_[3] && configured_[4] ? gap : 0);
+    return std::max(ui::line_height(Font::ICON_SMALL), text) + 2 * gap;
+  }
+
+  void create_small_flow(lv_obj_t *parent, int top_h, int lane, int pad) {
+    const bool stacked = small_ == model::SmallFlow::STACKED;
+    cell_w_ = width_ / (stacked ? 2 : 3);
+    const int cx = width_ / 2;
+    const int left = cell_w_ / 2, right = width_ - left;
+    create_node(parent, 0, left, cell_w_);
+    create_node(parent, 1, right, cell_w_);
+    create_node(parent, 2, cx, cell_w_);
+    visible_ = wanted_;
+    const int day_h = configured_[5] ? ui::line_height(Font::BODY) + pad : 0;
+    cell_h_ = stacked ? (top_h - 2 * lane + day_h) / 2 : top_h;
+    // Stack the two source nodes over a common line feeding the house on tall tiles.
+    if (stacked) {
+      const int rail_y = cell_h_ + lane;
+      rail_ = ui::block(parent, theme::LINE);
+      lv_obj_set_pos(rail_, left, rail_y);
+      lv_obj_set_size(rail_, right - left, std::max(1, ui::px(2)));
+      stem_ = ui::block(parent, theme::LINE);
+      lv_obj_set_pos(stem_, cx, rail_y);
+      lv_obj_set_size(stem_, std::max(1, ui::px(2)), lane);
+      add_link(parent, 0, left, cell_h_ + lane / 2, lane, true);
+      add_link(parent, 1, right, cell_h_ + lane / 2, lane, true);
+      y_[2] = rail_y + lane;
+      home_h_ = top_h - y_[2];
+    } else {
+      // Links share the icon row; readings below can use the entire column.
+      small_inset_ = std::max(pad, (top_h - ui::line_height(Font::ICON_SMALL) -
+                                     ui::line_height(Font::TITLE) - ui::line_height(Font::BODY) - day_h) / 2 - pad);
+      const int icon_y = small_inset_ + ui::line_height(Font::ICON_SMALL) / 2;
+      add_link(parent, 0, (left + cx) / 2, icon_y, lane, false);
+      add_link(parent, 1, (right + cx) / 2, icon_y, lane, false);
+    }
+    if (configured_[5]) create_day(parent);
+    if (configured_[3] || configured_[4]) create_pack(parent, top_h + lane, top_h, pad);
+  }
+
+  void create_pack(lv_obj_t *parent, int by, int start, int gap) {
+    const int icon = ui::line_height(Font::ICON_SMALL), title = ui::line_height(Font::TITLE);
+    const int body = ui::line_height(Font::BODY), pack_h = pack_height(gap);
+    const int symbol_w = 2 * icon;
+    const int text_space = std::max(1, width_ - symbol_w - 6 * gap);
+    int text_w = configured_[4] ? ui::text_width("100 %", Font::TITLE) : 0;
+    if (configured_[3]) {
+      for (auto key : {"charging", "discharging", "standby", "battery"})
+        text_w = std::max(text_w, ui::text_width(std::string(plugin_->text(key)) + " · -99.99 kW", Font::BODY));
+    }
+    text_w = std::min(text_w, text_space);
+    const int pack_w = symbol_w + text_w + 6 * gap;
+    const int bx = (width_ - pack_w) / 2;
+    const int right = bx + symbol_w + 4 * gap;
+    pack_ = ui::block(parent, theme::RAISED);
+    lv_obj_set_pos(pack_, bx, by);
+    lv_obj_set_size(pack_, pack_w, pack_h);
+    lv_obj_set_style_radius(pack_, gap, 0);
+    const int stroke = std::max(1, ui::px(2));
+    lv_obj_set_style_border_width(pack_, stroke, 0);
+    const int sx = bx + 2 * gap, sy = by + (pack_h - icon) / 2;
+    const int shell_w = symbol_w - 2 * stroke;
+    shell_ = ui::block(parent, theme::RAISED);
+    lv_obj_set_pos(shell_, sx, sy);
+    lv_obj_set_size(shell_, shell_w, icon);
+    lv_obj_set_style_radius(shell_, stroke * 2, 0);
+    lv_obj_set_style_border_width(shell_, stroke, 0);
+    cap_ = ui::block(parent, theme::BATTERY);
+    lv_obj_set_pos(cap_, sx + shell_w, sy + icon / 3);
+    lv_obj_set_size(cap_, 2 * stroke, std::max(1, icon / 3));
+    charge_bar_ = ui::block(parent, theme::BATTERY);
+    charge_width_ = std::max(1, shell_w - 4 * stroke);
+    lv_obj_set_pos(charge_bar_, sx + 2 * stroke, sy + 2 * stroke);
+    lv_obj_set_size(charge_bar_, charge_width_, std::max(1, icon - 4 * stroke));
+    lv_obj_add_flag(charge_bar_, LV_OBJ_FLAG_HIDDEN);
+    style_pack();
+    if (configured_[4]) {
+      value_[4] = ui::label(parent, Font::TITLE, theme::INK);
+      lv_obj_set_pos(value_[4], right, by + (configured_[3] ? gap : (pack_h - title) / 2));
+      lv_obj_set_width(value_[4], text_w);
+      flow_width_[4] = text_w;
+    }
+    if (configured_[3]) {
+      value_[3] = ui::label(parent, Font::BODY, theme::INK);
+      lv_obj_set_pos(value_[3], right, by + (configured_[4] ? title + 2 * gap : (pack_h - body) / 2));
+      lv_obj_set_width(value_[3], text_w);
+      flow_width_[3] = text_w;
+      add_link(parent, 3, width_ / 2, (start + by) / 2, by - start, true);
+    }
   }
 
   void create_day(lv_obj_t *parent) {
@@ -216,6 +278,8 @@ class OverviewTile : public tessera::Tile {
     if (state != Status::OK) direction = 0;
     uint32_t glyph = 0xF0054;  // solar to house
     if (i == 1) glyph = direction > 0 ? 0xF004D : 0xF0054;
+    if (small_ == model::SmallFlow::STACKED && i < 2)
+      glyph = i == 0 || direction > 0 ? 0xF0045 : 0xF005D;
     if (i == 3) glyph = direction > 0 ? 0xF0045 : 0xF005D;
     ui::set_text(arrows_[i], direction ? ui::icon(glyph) : "");
     if (i < 2 && direction) {
@@ -297,7 +361,10 @@ class OverviewTile : public tessera::Tile {
       const int icon_h = flow_ ? ui::line_height(Font::ICON_SMALL) + ui::px(2) : 0;
       const int room_w = flow_ ? flow_width_[i] : cell_w_;
       const int day_h = i == 0 && day_ ? bh + ui::px(2) : 0;
-      const int room_h = flow_ && i == 2 ? hub_diameter_ - ui::px(6) : cell_h_ - day_h;
+      const bool horizontal = small_ == model::SmallFlow::HORIZONTAL;
+      const int row_h = i == 2 && home_h_ ? home_h_ : cell_h_;
+      const int inset = horizontal ? small_inset_ : 0;
+      const int room_h = i == 2 && hub_diameter_ ? hub_diameter_ - ui::px(6) : row_h - day_h - inset;
       const bool show_caption = room_h >= bh * 2;
       const int available_h = show_caption ? room_h - bh - ui::px(2) - icon_h : room_h;
       Font face = Font::BODY;
@@ -309,7 +376,7 @@ class OverviewTile : public tessera::Tile {
       ui::set_text(value_[i], value);
       ui::set_tone(value_[i], tone, theme::INK);
       const int total = icon_h + ui::line_height(face) + (show_caption ? bh + ui::px(2) : 0);
-      const int top = y_[i] + std::max(0, (cell_h_ - total - day_h) / 2);
+      const int top = y_[i] + (horizontal ? inset : std::max(0, (row_h - total - day_h) / 2));
       if (flow_) {
         if (panels_[i]) ui::set_fill(panels_[i], Tone::NORMAL, theme::RAISED);
         if (i == 2) ui::set_tone(icons_[i], Tone::GOOD, theme::INK);
@@ -338,7 +405,9 @@ class OverviewTile : public tessera::Tile {
   std::array<lv_obj_t *, 6> panels_{}, icons_{}, tracks_{}, arrows_{};
   lv_obj_t *pack_ = nullptr, *shell_ = nullptr, *cap_ = nullptr, *charge_bar_ = nullptr, *day_ = nullptr;
   int charge_width_ = 0;
-  int hub_diameter_ = 0;
+  model::SmallFlow small_ = model::SmallFlow::NONE;
+  lv_obj_t *rail_ = nullptr, *stem_ = nullptr;
+  int small_inset_ = 0, home_h_ = 0, hub_diameter_ = 0;
   std::array<int, 6> flow_width_{};
   bool flow_ = false;
   lv_obj_t *footer_ = nullptr;

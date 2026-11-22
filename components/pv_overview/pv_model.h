@@ -97,6 +97,19 @@ inline std::string format(double value, Kind kind) {
   return text;
 }
 
+enum class SmallFlow { NONE, HORIZONTAL, STACKED };
+
+// top_height excludes the battery panel and its link. Each node owns its text column.
+inline SmallFlow small_flow(int width, int top_height, bool portrait, int value_width,
+                            int day_width, int source_height, int home_height, int lane) {
+  const bool stacked = width / 2 >= std::max(value_width, day_width) &&
+                       top_height >= source_height + 2 * lane + home_height;
+  if (portrait && stacked) return SmallFlow::STACKED;
+  if (width / 3 >= std::max(value_width, day_width) && top_height >= source_height &&
+      width / 3 >= 2 * lane) return SmallFlow::HORIZONTAL;
+  return stacked ? SmallFlow::STACKED : SmallFlow::NONE;
+}
+
 struct Layout { int columns = 1; int count = 1; };
 // Prefer all requested readings; use additional columns only when each cell is wide enough.
 inline Layout layout(int width, int height, int count, int cell_width, int cell_height, int gap) {
