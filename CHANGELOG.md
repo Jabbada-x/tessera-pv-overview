@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.0 - 2026-11-22
+- Display daily yield directly under solar output when space allows.
+- Show battery charge and power beside a horizontal charge indicator on a tinted, outlined card in both themes.
+
 ## 0.3.0 - 2026-11-20
 - The control-room view groups battery charge and power below the central house. The battery panel fits its contents and leaves more space below the icon.
 

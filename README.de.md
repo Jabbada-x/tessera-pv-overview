@@ -31,7 +31,7 @@ Bei mehreren Wechselrichtern einen Summensensor auswählen. Für mehrere Akkus s
 
 ## Größenanpassung
 
-Unter dem runden Haus zeigt ein zentriertes Akkufeld Ladestand, Laderichtung und Leistung. Der Abstand unter dem Akkusymbol skaliert mit dem Display. Für beide Werte die Sensoren Akkuleistung und Akkuladestand zuordnen.
+Unter dem runden Haus zeigt ein zentriertes Akkufeld Ladestand, Laderichtung und Leistung. Das waagerechte Akkusymbol zeigt den Füllstand. Rechts daneben stehen Prozentwert und Leistung. Fläche und Rahmen heben die Speicherkarte in beiden Designs hervor. Der Tagesertrag steht bei ausreichender Höhe direkt unter der Solarleistung. Für beide Werte die Sensoren Akkuleistung und Akkuladestand zuordnen.
 
 Im Modus **Automatisch** zeigt eine große Kachel das Haus zwischen Solarmodul und Stromnetz. Pfeile zeigen die Richtung am Netzanschluss und am optionalen Akku. Bei Stillstand oder fehlenden Messwerten bleibt die Verbindung ohne Pfeil. Tagesertrag und Ladestand erscheinen als Zusatzwerte. Kleinere Kacheln und der Modus **Kompakt** verwenden die Zahlenansicht. Angezeigt wird in der Reihenfolge Solar, Netz, Haus, Akkuleistung, Ladestand, Tagesertrag. Sehr kleine Kacheln zeigen nur Solar. Größere Kacheln zeigen weitere Werte; nicht ausgewählte optionale Sensoren entfallen. **Automatisch** zeigt bis zu sechs Werte, **Kompakt** bis zu vier. Eine Fußzeile weist bei genügend Platz auf ausgelassene Werte hin.
 

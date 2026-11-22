@@ -33,7 +33,7 @@ For two solar inverters choose an existing sum sensor, or create a Home Assistan
 
 ## Size and appearance
 
-The central home dial connects to a compact battery panel sized for its readings. Select battery power and charge to show both. The charge icon sits above the percentage with a screen-scaled gap.
+The central home dial connects to a compact battery panel sized for its readings. Select battery power and charge to show both. A horizontal battery gauge sits beside charge and power on a tinted, outlined card in both themes. Daily yield appears beneath solar power when the tile has enough height.
 
 The same plugin runs on all Tessera boards; there are no hard-coded 4-, 7- or 10.1-inch layouts. Large automatic tiles place the house between solar and grid, with a battery branch when configured. Live arrows indicate import/export and charging/discharging. Smaller tiles and Compact mode use numeric cells. Selected optional inputs are included as room permits. Order: solar, grid, home, battery power, charge, today. Very small tiles show only solar; increasing the tile reveals more readings. Optional inputs left empty use no cell. The full-page option and sizes 1x1 through 9x9 are offered only where they fit Tessera's grid.
 
