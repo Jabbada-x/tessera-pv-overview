@@ -1,5 +1,5 @@
 id: pv_overview
-version: 0.5.0
+version: 0.5.1
 api: '0.15'
 icon: solar-power
 maintainer: Jabbada-x
@@ -20,7 +20,7 @@ tiles:
     min: 1x1
     max: 9x9
     full: true
-  memory: 6144
+  memory: 3072
   example: tile_example
   options:
   - id: solar

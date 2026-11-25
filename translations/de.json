@@ -4,7 +4,7 @@
   },
   "app": {
     "name": "PV-Übersicht",
-    "summary": "Solar, Netz, Haus und Akku in einer Kachel, die sich an den verfügbaren Platz anpasst.",
+    "summary": "Sieh PV-Leistung, Netzfluss und Hausverbrauch zusammen mit der Ladeleistung und dem Ladestand deines Akkus.",
     "tile_name": "PV-Übersicht",
     "tile_example": "Energiesensoren auswählen",
     "solar": "Solarleistung",

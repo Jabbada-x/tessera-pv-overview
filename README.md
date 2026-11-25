@@ -1,20 +1,16 @@
 # PV overview
 
-> Development beta for Tessera firmware 0.60.0 (plugin API 0.24). Manifest checks and native model tests are provided; a complete ESPHome build, the official visual bench and physical display tests have not been completed.
-
-A responsive tile for solar power, grid import/export, home consumption, battery power, battery charge and daily solar yield. Select Home Assistant sensors separately for each tile. No cloud service or Home Assistant control actions are used.
+Track solar generation, grid exchange and home consumption alongside your battery’s charging or discharging power and state of charge. Each tile uses the Home Assistant sensors you choose.
 
 ## Set up
 
-In Tessera, open **Plugins → Add with a link** and paste the URL of this GitHub repository. Add the plugin to a display, build its firmware and select the sensors in Layout. The following steps describe local installation.
+1. In Tessera, open **Plugins**, choose **PV overview** in the store and add it to your screen.
+2. Build and install the screen firmware. Wait for the screen to reconnect.
+3. Open the screen’s **Layout**, place **PV overview** from **Plugins** and choose a tile size.
+4. Select the two required sensors: total AC solar power and signed net grid power. Add measured home consumption, signed battery power, battery charge or today’s solar yield if available.
+5. Positive grid power means import and positive battery power means charging. Enable **Invert grid sign** if your sensor reports export as positive, or **Invert battery sign** if it reports discharge as positive.
 
-1. Extract the archive. Copy the complete `pv_overview` folder to `/config/tessera-plugins/pv_overview/` in Home Assistant, beside the `esphome` folder. The manifest must be `/config/tessera-plugins/pv_overview/tessera-plugin.yaml`, without a second nested folder.
-2. Open Tessera > Plugins. The local plugin appears as **Test**. Add it to one screen first and build its firmware. This is the first real firmware compilation test of this beta; if it fails, keep the complete build log.
-3. In that screen's Layout, add **PV overview** from Plugins. Select solar and signed net grid power sensors. Choose the optional sensors you have.
-4. Resize the tile in Layout, or choose the whole page. Layout and sensor changes do not require another firmware build. Add the plugin to the other displays after the first screen has passed its test.
-5. If positive grid power means export in your installation, enable **Invert grid sign**. If positive battery power means discharge, enable **Invert battery sign**.
-
-The plugin is compiled into the display firmware. It cannot be installed as a normal Lovelace card or by uploading the ZIP directly to a display. Code changes require **Build again** in the screen's Plugins tab.
+You can change sensors and tile size in Layout at any time. After a plugin code update, use **Build again** on the screen’s Plugins tab.
 
 ## Sensor mapping
 
@@ -47,8 +43,6 @@ Grid/battery values retain their normalized +/- sign even if a caption must be s
 
 Age checking is off by default. Set **Maximum reading age** only when all selected sensors regularly refresh their `updated` timestamps. Otherwise a correct, unchanged value (especially charge or a night-time energy counter) could be marked old. When enabled, stale readings show **Old data**, not a current-looking number. A missing clock or timestamp cannot be age-checked. The Home Assistant footer names the data source, not a guaranteed connection status; watch Tessera's connection indicator for connectivity.
 
-## Validation and development
+## Tested displays
 
-See `VALIDATION.md`. The source is based on Tessera's official template. Plugin API minimum is 0.15; only APIs present in firmware 0.60.0/API 0.24 are used. The schema was checked against release `screens-v0.4.97`, which ships firmware 0.60.0. No firmware upgrade is assumed.
-
-The archive contains deterministic synthetic preview fixtures, not recordings of your installation. Flash/memory budgets are conservative estimates pending a real build. This beta is for local testing, not a verified store release.
+The maintainer successfully tested the tile on Guition 4-inch, 7-inch and 10-inch displays running Tessera 0.62.0. See [validation notes](VALIDATION.md) for additional checks.

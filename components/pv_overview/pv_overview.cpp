@@ -218,10 +218,10 @@ class OverviewTile : public tessera::Tile {
     lv_obj_set_size(shell_, shell_w, icon);
     lv_obj_set_style_radius(shell_, stroke * 2, 0);
     lv_obj_set_style_border_width(shell_, stroke, 0);
-    cap_ = ui::block(parent, theme::BATTERY);
+    cap_ = ui::block(parent, theme::MARK_GREEN);
     lv_obj_set_pos(cap_, sx + shell_w, sy + icon / 3);
     lv_obj_set_size(cap_, 2 * stroke, std::max(1, icon / 3));
-    charge_bar_ = ui::block(parent, theme::BATTERY);
+    charge_bar_ = ui::block(parent, theme::MARK_GREEN);
     charge_width_ = std::max(1, shell_w - 4 * stroke);
     lv_obj_set_pos(charge_bar_, sx + 2 * stroke, sy + 2 * stroke);
     lv_obj_set_size(charge_bar_, charge_width_, std::max(1, icon - 4 * stroke));
@@ -249,7 +249,7 @@ class OverviewTile : public tessera::Tile {
   }
 
   void style_pack() {
-    const auto accent = ui::tone_color(Tone::GOOD, theme::BATTERY);
+    const auto accent = ui::tone_color(Tone::GOOD, theme::MARK_GREEN);
     const auto tint = lv_color_mix(accent, ui::color(theme::CARD), LV_OPA_20);
     const auto edge = lv_color_mix(accent, ui::color(theme::INK), LV_OPA_50);
     for (auto *part : {pack_, shell_}) {
@@ -283,7 +283,7 @@ class OverviewTile : public tessera::Tile {
     if (i == 3) glyph = direction > 0 ? 0xF0045 : 0xF005D;
     ui::set_text(arrows_[i], direction ? ui::icon(glyph) : "");
     if (i < 2 && direction) {
-      const auto role = i == 0 ? theme::ENERGY_SOLAR : theme::ACCENT;
+      const auto role = i == 0 ? theme::MARK_AMBER : theme::ACCENT;
       ui::set_color(arrows_[i], role);
       ui::set_fill(tracks_[i], Tone::NORMAL, role);
       return;
@@ -380,7 +380,7 @@ class OverviewTile : public tessera::Tile {
       if (flow_) {
         if (panels_[i]) ui::set_fill(panels_[i], Tone::NORMAL, theme::RAISED);
         if (i == 2) ui::set_tone(icons_[i], Tone::GOOD, theme::INK);
-        else ui::set_color(icons_[i], i == 0 ? theme::ENERGY_SOLAR : theme::ACCENT);
+        else ui::set_color(icons_[i], i == 0 ? theme::MARK_AMBER : theme::ACCENT);
         if (state == Status::OK) ui::set_color(value_[i], theme::INK);
         lv_obj_set_pos(icons_[i], x_[i], top);
         paint_link(i, state, tone);

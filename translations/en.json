@@ -4,7 +4,7 @@
   },
   "app": {
     "name": "PV overview",
-    "summary": "Solar, grid, home and battery readings in a tile that adapts to its available space.",
+    "summary": "See solar, grid and home power together with your battery’s power and state of charge.",
     "tile_name": "PV overview",
     "tile_example": "Choose your energy sensors",
     "solar": "Solar power",

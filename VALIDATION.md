@@ -1,8 +1,10 @@
-# Validation — 0.2.0
+# Validation
 
-Checked on 2026-11-20. This is an implementation beta, not a hardware-verified release.
+## Physical displays
 
-## Passed
+On 2026-11-25 the maintainer confirmed successful use of the plugin on Guition 4-inch, 7-inch and 10-inch displays running Tessera 0.62.0. Light and dark appearance were also checked visually. These tests preceded the 0.5.1 palette update.
+
+## Earlier checks (2026-11-20)
 
 - Official `tessera-plugins/tools/check.py` against the unmodified manifest validator from Tessera release `screens-v0.4.97` (firmware 0.60.0, plugin API 0.24): `pv_overview: ok`, `needs: ok`. The catalog artwork passes the store image checks.
 - C++17 native tests for the shared production model: strict number parsing, missing/unavailable/invalid states, W/kW and Wh/kWh conversion, percentage bounds, unsupported units, age checking, direction hysteresis, formatting, and more than 60,000 combinations of layout dimensions and requested reading counts.
@@ -11,9 +13,7 @@ Checked on 2026-11-20. This is an implementation beta, not a hardware-verified r
 
 ## Not completed
 
-- Full ESPHome firmware compilation and linking, including the C++ tile adapter against LVGL.
 - The official render bench and image inspection for light/dark on 4-, 7-, 10.1-inch screens. Invoking `tools/preview.py --strict` stops because `git` is missing. Shell DNS/network access also prevents fetching its build dependencies.
-- Physical display tests, sensor delivery from the user's Home Assistant, and OTA installation.
 - Measured flash/RAM budgets. Manifest values are estimates.
 
 ## Repeat native tests
@@ -45,14 +45,14 @@ If the current preview harness requires a newer core, use the corresponding olde
 
 The preview values are explicitly synthetic. They exercise a consistent AC balance (1,200 W solar, 600 W household, 400 W charge and 200 W export). The first fixture leaves the house sensor empty, so its calculated house value in 0.4.1 is 600 W. The compact fixture uses the measured 600 W appliance load.
 
-## Physical acceptance
+## Checklist for future hardware tests
 
-1. Install locally on one screen; retain the build log if compilation fails.
+1. Build and install the plugin on one screen; retain the build log if compilation fails.
 2. Check selected readings against Home Assistant including actual units and positive/negative grid/battery cases.
 3. Confirm optional channels disappear when unselected, and unavailable channels never become zero.
 4. Try small, medium and full-page sizes, portrait/landscape where used, and both themes.
 5. Test connection loss and recovery. Tessera's connection indicator is authoritative; the plugin footer only names the data source.
-6. Repeat on the user's 4-, 7- and 10.1-inch displays before broader use.
+6. Repeat on each target display.
 
 ## References
 

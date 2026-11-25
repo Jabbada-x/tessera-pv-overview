@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1 - 2026-11-25
+- Use supported Tessera theme colours for solar and battery indicators. Rebuild the screen firmware to apply the update.
+- Set the estimated layout memory to 3072 bytes per tile.
+- Document store setup, sensor signs and Guition hardware tests with Tessera 0.62.0.
+
 ## 0.5.0 - 2026-11-22
 - Add compact horizontal and stacked energy flows for smaller 2×2 and 2×3 automatic tiles.
 
